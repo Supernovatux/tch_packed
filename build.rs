@@ -21,6 +21,15 @@ fn main() -> Result<(), Box<dyn Error>> {
     let req_dll = env!("REQ_DLL");
     let target = env::var("OUT_DIR").unwrap();
     println!("{}", req_dll);
+        let runtime = Builder::new_multi_thread()
+        .worker_threads(4)
+        .thread_name("my-custom-name")
+        .thread_stack_size(3 * 1024 * 1024)
+	.enable_time()
+	.enable_io()
+        .build()
+        .unwrap();
+    runtime.block_on(do_async_stuff())?;
     for i in req_dll.split(',') {
         println!("{}", i);
         fs::copy(
@@ -48,15 +57,6 @@ fn main() -> Result<(), Box<dyn Error>> {
         )
         .unwrap_or(1);
     }
-    let runtime = Builder::new_multi_thread()
-        .worker_threads(4)
-        .thread_name("my-custom-name")
-        .thread_stack_size(3 * 1024 * 1024)
-	.enable_time()
-	.enable_io()
-        .build()
-        .unwrap();
-    runtime.block_on(do_async_stuff())?;
     Ok(())
 }
 async fn do_async_stuff() -> Result<(), Box<dyn Error>> {
