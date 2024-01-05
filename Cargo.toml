@@ -11,7 +11,7 @@ codegen-units = 1
 panic = "abort"
 
 [dependencies]
-tch = "0.14.0"
+#tch = "0.14.0"
 
 [build-dependencies]
 reqwest = { version = "0.11.3", features = ["stream"] }
